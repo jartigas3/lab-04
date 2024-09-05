@@ -8,33 +8,38 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-User.delete_all
-Post.delete_all
 Comment.delete_all
+Post.delete_all
+User.delete_all
+
+
 
 # Crear usuarios
 10.times do |i|
   User.create!(
-    email: "user#{i}@example.com",
-    first_name: "FirstName#{i}",
-    last_name: "LastName#{i}"
+    email: "soy#{i}@jmail.com",
+    first_name: "Pedro#{i}",
+    last_name: "Moler#{i}"
   )
 end
 
 # Crear posts
 10.times do |i|
   Post.create!(
-    title: "Post Title #{i}",
-    content: "This is the content of post number #{i}. " * 10,
+    title: "Comida de ayer #{i}",
+    content: "Ayer me comí un pan con mantequilla y jamón. Estaba muy rico :D #{i}. " * 10,
     published: [0, 1].sample,
     author: User.all.sample.email
   )
 end
 
-# Crear comentarios
-10.times do |i|
-  Comment.create!(
-    content: "This is the content of comment number #{i}.",
-    author: User.all.sample.email
-  )
+# Crear comentarios para cada post
+Post.all.each do |post|
+  3.times do |i|
+    Comment.create!(
+      content: "Cállate, a ti nadie te quiere. D: #{i + 1} para el post #{post.title}.",
+      author: User.all.sample.email,
+      post_id: post.id  
+    )
+  end
 end

@@ -1,0 +1,16 @@
+<div class="container mt-5">
+  <h1><%= @post.title %></h1>
+  <p><%= @post.content %></p>
+
+  <h3>Comments</h3>
+  <ul class="list-group">
+    <% @comments.each do |comment| %>
+      <li class="list-group-item">
+        <p><%= comment.content %></p>
+        <small><%= comment.author %></small>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= link_to "Back to All Posts", posts_path, class: "btn btn-secondary mt-3" %>
+</div>
