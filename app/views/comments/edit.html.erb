@@ -1,0 +1,12 @@
+<h2>Editar comentario</h2>
+
+<%= form_with model: [ @post, @comment ], local: true do |f| %>
+  <div class="form-group">
+    <%= f.label :content %>
+    <%= f.text_area :content, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.submit "Actualizar comentario", class: "btn btn-primary" %>
+  </div>
+<% end %>

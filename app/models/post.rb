@@ -7,6 +7,10 @@ class Post < ApplicationRecord
     validates :content, presence: true, length: { minimum: 140 }
     validates :author, presence: true
     validate :author_exists
+
+    belongs_to :user
+    has_many :comments, dependent: :destroy
+    has_rich_text :content
   
     private
   

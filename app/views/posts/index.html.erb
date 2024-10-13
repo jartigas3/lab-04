@@ -1,11 +1,16 @@
 <div class="container mt-5">
   <h1>All Posts</h1>
 
+  <% if user_signed_in? %>
+    <%= link_to "Crear Nuevo Post", new_post_path, class: "btn btn-primary" %>
+  <% end %>
+
   <ul class="list-group">
     <% @posts.each do |post| %>
       <li class="list-group-item">
         <h3><%= link_to post.title, post_path(post) %></h3>
-        <p><%= post.content.truncate(100) %></p>
+        <p><%= post.content.to_plain_text.truncate(100) %></p>
+
         <%= link_to "Read more", post_path(post), class: "btn btn-primary" %>
       </li>
     <% end %>
