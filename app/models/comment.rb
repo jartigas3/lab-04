@@ -3,6 +3,8 @@ class Comment < ApplicationRecord
     belongs_to :post
     validates :post, presence: true
 
+    has_rich_text :content
+
     validates :content, presence: true
     validates :author, presence: true
     validate :author_exists

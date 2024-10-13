@@ -1,53 +1,54 @@
 class CommentsController < ApplicationController
-    before_action :authenticate_user!, only: [:create, :edit, :update, :destroy]  # Solo usuarios autenticados pueden crear, editar o eliminar
-    load_and_authorize_resource  # Usa CanCanCan para autorizar acciones
+    before_action :authenticate_user!
+    before_action :set_post
+    before_action :set_comment, only: [:edit, :update, :destroy]
     before_action :correct_user, only: [:edit, :update, :destroy]
   
     def create
-      @post = Post.find(params[:post_id])
       @comment = @post.comments.build(comment_params)
-      @comment.user = current_user  # Asigna el comentario al usuario actual
+      @comment.user = current_user
   
       if @comment.save
-        redirect_to @post, notice: 'Comentario creado con éxito.'
+        redirect_to @post, notice: 'Comentario creado exitosamente.'
       else
-        redirect_to @post, alert: 'Error al crear el comentario.'
+        redirect_to @post, alert: 'No se pudo crear el comentario.'
       end
     end
   
     def edit
-      @comment = Comment.find(params[:id])
-      @post = @comment.post
     end
   
     def update
-      @comment = Comment.find(params[:id])
-  
       if @comment.update(comment_params)
-        redirect_to @comment.post, notice: 'Comentario actualizado con éxito.'
+        redirect_to @post, notice: 'Comentario actualizado exitosamente.'
       else
-        render :edit, alert: 'Error al actualizar el comentario.'
+        render :edit
       end
     end
   
     def destroy
-      @comment = Comment.find(params[:id])
-      @post = @comment.post
       @comment.destroy
-      redirect_to @post, notice: 'Comentario eliminado con éxito.'
+      redirect_to @post, notice: 'Comentario eliminado exitosamente.'
     end
   
     private
   
+    def set_post
+      @post = Post.find(params[:post_id])
+    end
+  
+    def set_comment
+      @comment = @post.comments.find(params[:id])
+    end
+  
+    def correct_user
+      unless @comment.user == current_user
+        redirect_to @post, alert: "No tienes permiso para realizar esa acción."
+      end
+    end
+  
     def comment_params
       params.require(:comment).permit(:content)
     end
-
-    def correct_user
-        @comment = Comment.find(params[:id])
-        unless @comment.user == current_user
-          redirect_to post_path(@comment.post), notice: "No tienes permiso para realizar esa acción."
-        end
-      end
   end
   

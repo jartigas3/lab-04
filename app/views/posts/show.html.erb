@@ -4,18 +4,22 @@
 
   <h3>Comments</h3>
   <ul class="list-group">
-    <% @post.comments.each do |comment| %>
-      <li class="list-group-item">
-        <p><%= comment.content %></p>
-        <small><%= comment.user.email %></small> <!-- Mostramos el email del autor del comentario -->
+  <% @post.comments.each do |comment| %>
+    <li class="list-group-item">
+      <p><%= comment.content.body %></p> <!-- Mostramos el contenido del comentario -->
+      <% if comment.user.present? %>
+        <small>Por <%= comment.user.email %></small> <!-- Mostramos el email del autor del comentario -->
+      <% else %>
+        <small>Autor desconocido</small>
+      <% end %>
 
-        <% if comment.user == current_user %>  <!-- Mostrar los botones solo si es el autor del comentario -->
-          <%= link_to "Editar", edit_post_comment_path(@post, comment), class: "btn btn-sm btn-warning" %>
-          <%= link_to "Eliminar", post_comment_path(@post, comment), method: :delete, data: { confirm: "¿Estás seguro?" }, class: "btn btn-sm btn-danger" %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
+      <% if comment.user == current_user %> <!-- Mostrar los botones solo si es el autor del comentario -->
+        <%= link_to "Editar", edit_post_comment_path(@post, comment), class: "btn btn-sm btn-warning" %>
+        <%= link_to "Eliminar", post_comment_path(@post, comment), method: :delete, data: { confirm: "¿Estás seguro?" }, class: "btn btn-sm btn-danger" %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
 
   <!-- Si el usuario está logueado, mostrar el formulario para agregar comentarios -->
   <% if user_signed_in? %>
@@ -23,7 +27,7 @@
     <%= form_with(model: [@post, Comment.new], local: true) do |form| %>
       <div class="form-group">
         <%= form.label :content, "Comentario" %>
-        <%= form.text_area :content, class: "form-control", rows: 3 %>
+        <%= form.rich_text_area :content, class: "form-control" %> <!-- Usamos rich_text_area para el WYSIWYG -->
       </div>
       <div class="form-group mt-2">
         <%= form.submit "Agregar comentario", class: "btn btn-primary" %>
@@ -35,4 +39,3 @@
 
   <%= link_to "Volver a Todos los Posts", posts_path, class: "btn btn-secondary mt-3" %>
 </div>
-
